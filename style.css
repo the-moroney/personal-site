@@ -1,0 +1,150 @@
+/* =========================================
+   1. GLOBAL & BODY
+   ========================================= */
+body {
+  background-color: #F4F1EA; /* Newsprint/Bone color */
+  color: black;
+  margin: 0;
+  overflow-x: hidden; /* Prevents horizontal scroll from skewed text */
+}
+
+.container {
+  padding: 20px;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* =========================================
+   2. THE MAIN TITLE (Saul Bass Skew)
+   ========================================= */
+.title-mask {
+  overflow: hidden; 
+  display: inline-block;
+  width: 100%; /* Spans full width to allow skew room */
+  border-bottom: 8px solid #D9381E; /* Heavy Red Floor */
+  padding-bottom: 10px;            
+  margin-bottom: 40px;            
+}
+
+.bass-title {
+  font-family: 'Anton', sans-serif;
+  font-size: 18vw;  
+  text-transform: uppercase;
+  line-height: 0.9;
+  color: black;
+  margin: 0;
+  
+  /* The Transformation Logic */
+  transform-origin: bottom left;    
+  animation: slideUpSkew 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes slideUpSkew {
+  0% { transform: translateY(110%) skewX(-15deg); }
+  100% { transform: translateY(0) skewX(-15deg); }
+}
+
+/* =========================================
+   3. SECTION HEADERS & TEXT
+   ========================================= */
+.lost-header {
+  font-family: 'Anton', sans-serif;
+  font-size: 4.5rem;
+  line-height: 0.85;
+  text-transform: uppercase;
+  color: black;
+  letter-spacing: 2px;
+  border-bottom: 6px solid #D9381E; /* Red floor for mobile */
+  padding-bottom: 15px;           
+  margin: 60px 0 20px 0;          
+  width: 100%;                    
+}
+
+.mech-text {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: black;
+  max-width: 40ch; /* Readability constraint */
+}
+
+.alert {
+  color: #D9381E; /* Saul Bass Red */
+  font-weight: bold;
+}
+
+/* =========================================
+   4. IMAGES (Mobile Defaults)
+   ========================================= */
+.noir-img, .poster-img {
+  display: block;
+  width: 90%;          /* Slightly wider on mobile */
+  max-width: 450px;     /* Don't let them get monstrous */
+  margin: 30px auto;    /* Centered with space */
+  height: auto;
+  border: 6px solid black; /* Heavy frame */
+}
+
+/* =========================================
+   5. BUTTONS & LINKS
+   ========================================= */
+.action-link {
+  display: inline-block;
+  margin-top: 20px;
+  background-color: black;
+  color: #F4F1EA;
+  padding: 12px 20px;
+  text-decoration: none;
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: bold;
+  border: 2px solid black;
+  transition: all 0.2s ease;
+}
+
+.action-link:hover {
+  background-color: transparent;
+  color: black;
+}
+
+/* =========================================
+   6. DESKTOP OVERRIDES (> 900px)
+   ========================================= */
+@media (min-width: 900px) {
+  
+  .bass-title {
+    font-size: 120px; 
+    max-width: 1200px;
+  }
+  
+  .section {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: flex-start; 
+    padding-bottom: 40px;    
+    margin-bottom: 80px;     
+    border-bottom: 6px solid #D9381E; /* Red Line spans the whole row */
+  }
+
+  .lost-header {
+    width: 25%;              
+    border-bottom: none; /* Line moves to the .section container */
+    margin: 0;
+    padding: 0;
+    font-size: 5rem;         
+  }
+
+  .mech-text {
+    width: 45%;              
+    max-width: none;         
+    padding-top: 10px;       
+    font-size: 1.1rem;    
+    padding-right: 50px; 
+  }
+  
+  .noir-img, .poster-img {
+     width: 25%;             
+     margin: 0;              
+     padding-top: 10px;      
+     border-width: 8px;     
+  }
+}
