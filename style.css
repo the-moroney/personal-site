@@ -1,11 +1,17 @@
 /* =========================================
-   1. GLOBAL & BODY
+   1. GLOBAL & BODY (The Container Cap)
    ========================================= */
 body {
-  background-color: #F4F1EA; /* Newsprint/Bone color */
+  background-color: #F4F1EA;
   color: black;
   margin: 0;
-  overflow-x: hidden; /* Prevents horizontal scroll from skewed text */
+  
+  /* FIXED: Stops the site from exploding on huge monitors */
+  max-width: 1400px; 
+  margin-left: auto;
+  margin-right: auto;
+  
+  overflow-x: hidden; 
 }
 
 .container {
@@ -15,26 +21,27 @@ body {
 }
 
 /* =========================================
-   2. THE MAIN TITLE (Saul Bass Skew)
+   2. THE MAIN TITLE (Capped Size)
    ========================================= */
 .title-mask {
   overflow: hidden; 
   display: inline-block;
-  width: 100%; /* Spans full width to allow skew room */
-  border-bottom: 8px solid #D9381E; /* Heavy Red Floor */
+  width: 100%; 
+  border-bottom: 8px solid #D9381E; 
   padding-bottom: 10px;            
   margin-bottom: 40px;            
 }
 
 .bass-title {
   font-family: 'Anton', sans-serif;
-  font-size: 18vw;  
+  
+  /* FIXED: The Clamp. Min: 4rem, Ideal: 16vw, Max: 160px */
+  font-size: clamp(4rem, 16vw, 160px);  
+  
   text-transform: uppercase;
   line-height: 0.9;
   color: black;
   margin: 0;
-  
-  /* The Transformation Logic */
   transform-origin: bottom left;    
   animation: slideUpSkew 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
@@ -54,7 +61,7 @@ body {
   text-transform: uppercase;
   color: black;
   letter-spacing: 2px;
-  border-bottom: 6px solid #D9381E; /* Red floor for mobile */
+  border-bottom: 6px solid #D9381E; 
   padding-bottom: 15px;           
   margin: 60px 0 20px 0;          
   width: 100%;                    
@@ -65,11 +72,11 @@ body {
   font-size: 1rem;
   line-height: 1.5;
   color: black;
-  max-width: 40ch; /* Readability constraint */
+  max-width: 100%; /* Let it fill mobile width */
 }
 
 .alert {
-  color: #D9381E; /* Saul Bass Red */
+  color: #D9381E; 
   font-weight: bold;
 }
 
@@ -78,11 +85,11 @@ body {
    ========================================= */
 .noir-img, .poster-img {
   display: block;
-  width: 90%;          /* Slightly wider on mobile */
-  max-width: 450px;     /* Don't let them get monstrous */
-  margin: 30px auto;    /* Centered with space */
-  height: auto;
-  border: 6px solid black; /* Heavy frame */
+  width: 100%;         
+  max-width: 500px;     /* Cap mobile image size */
+  margin: 30px auto;    
+  height: auto;         /* FIXED: Ensures aspect ratio is respected */
+  border: 6px solid black; 
 }
 
 /* =========================================
@@ -107,43 +114,45 @@ body {
 }
 
 /* =========================================
-   6. DESKTOP OVERRIDES (> 900px)
+   6. DESKTOP OVERRIDES (The Layout Fix)
    ========================================= */
-
-@media (min-width: 1100px) { /* Increased from 900px */
+@media (min-width: 1100px) {
   
   .section {
     display: flex; 
     justify-content: space-between; 
-    align-items: flex-start; 
-    gap: 5%; /* Flexible gap prevents overlapping */
-    padding-bottom: 40px;    
+    align-items: flex-start; /* Aligns tops of text/images */
+    gap: 60px; /* Increased gap for breathing room */
+    padding-bottom: 60px;    
     margin-bottom: 80px;     
     border-bottom: 6px solid #D9381E; 
   }
 
   .lost-header {
-    width: 20%; /* Narrowed */
+    width: 25%; 
     border-bottom: none; 
     margin: 0;
-    font-size: 5rem;         
+    font-size: 4rem; /* Capped header size */
+    flex-shrink: 0;  /* Prevents header from squishing */
   }
 
   .mech-text {
-    width: 45%; /* Stable width for reading */
+    width: 40%; 
     font-size: 1.1rem;    
   }
   
-  .noir-img, .poster-img, .spacer {
-     width: 25%; /* Aligned third column */
-     margin: 0;              
-  }
-}
-
-/* Mobile specific centering fix */
-@media (max-width: 1099px) {
+  /* FIXED IMAGE LOGIC FOR DESKTOP */
   .noir-img, .poster-img {
-    width: 80%;
-    margin: 20px auto;
+     width: 30%;            /* Give images more horizontal room */
+     margin: 0;             
+     border-width: 8px;   
+     height: auto;          /* Strictly enforces ratio */
+     object-fit: contain;   /* Prevents squishing */
+     align-self: flex-start;
+  }
+  
+  /* Handle the ghost spacer for the Bio section */
+  .spacer {
+    width: 30%;
   }
 }
