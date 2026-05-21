@@ -1,0 +1,10 @@
+clients:
+  - name: Adam Click
+    initials: ac--rm
+    slug: adamclick
+    permanent_video_url: https://robinmoroney.com/adamclick-videochat
+    riverside_urls:
+      - https://riverside.com/studio/ac--rm?t=e5f2d8609444cffca566
+    notes:
+      - Riverside initials must match the client + Robin Moroney code.
+      - Expand this file over time for client admin, reminders, and link management.
