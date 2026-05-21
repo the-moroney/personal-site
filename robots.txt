@@ -1,24 +1,32 @@
 User-agent: *
-Disallow: /session/
 Disallow: /lab/
+Disallow: /session/
+Disallow: /*-videochat
 
 User-agent: GPTBot
 Disallow: /session/
+Disallow: /*-videochat
 
 User-agent: ChatGPT-User
 Disallow: /session/
+Disallow: /*-videochat
 
 User-agent: PerplexityBot
 Disallow: /session/
+Disallow: /*-videochat
 
 User-agent: ClaudeBot
 Disallow: /session/
+Disallow: /*-videochat
 
 User-agent: Applebot-Extended
 Disallow: /session/
+Disallow: /*-videochat
 
 User-agent: CCBot
 Disallow: /session/
+Disallow: /*-videochat
 
 User-agent: Google-Extended
 Disallow: /session/
+Disallow: /*-videochat
