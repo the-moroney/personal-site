@@ -1,2 +1,24 @@
 User-agent: *
+Disallow: /session/
 Disallow: /lab/
+
+User-agent: GPTBot
+Disallow: /session/
+
+User-agent: ChatGPT-User
+Disallow: /session/
+
+User-agent: PerplexityBot
+Disallow: /session/
+
+User-agent: ClaudeBot
+Disallow: /session/
+
+User-agent: Applebot-Extended
+Disallow: /session/
+
+User-agent: CCBot
+Disallow: /session/
+
+User-agent: Google-Extended
+Disallow: /session/
