@@ -262,11 +262,21 @@
 
         @media (max-width: 768px) {
             h1 { font-size: 2.5rem; }
+            .filters {
+                position: static !important; /* Vanishes with scrolling */
+                box-shadow: none !important;
+            }
             .charts-row {
                 flex-direction: column;
+                gap: 20px;
             }
-            .chart-box {
-                height: 350px;
+            .chart-box, .chart-box-small, .bar-chart-box {
+                height: 82vh !important; /* One chart per screen for screenshots */
+                margin-bottom: 40px !important;
+                box-sizing: border-box;
+            }
+            .bar-canvas-wrapper {
+                height: 75% !important; /* Ensure canvas fills the box */
             }
             .correlation-display {
                 font-size: 1.2rem;
