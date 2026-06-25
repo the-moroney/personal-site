@@ -272,6 +272,7 @@
             }
             .chart-box, .chart-box-small, .bar-chart-box {
                 height: 80vh !important; /* Fits perfectly on mobile viewports */
+                max-height: 80vh !important; /* FOOLPROOF: Prevents any vertical expansion */
                 margin-bottom: 45px !important;
                 box-sizing: border-box;
                 display: flex !important;
@@ -279,7 +280,7 @@
                 overflow: hidden !important; /* Stops Chart.js infinite resize/expansion loop */
                 padding: 15px !important;
             }
-            .chart-box canvas, .chart-box-small canvas, .bar-canvas-wrapper {
+            .chart-box canvas, .chart-box-small canvas, .bar-canvas-wrapper, .bar-canvas-wrapper canvas {
                 flex-grow: 1 !important;
                 min-height: 0 !important;
                 height: 100% !important;
