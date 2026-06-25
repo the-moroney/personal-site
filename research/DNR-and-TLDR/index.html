@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Great Unread Books</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&family=Jost:wght@700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    
+    <style>
+        :root {
+            --bg-color: #fcfcfc;
+            --text-main: #111;
+            --text-sub: #555;
+            --font-head: 'Futura', 'Jost', sans-serif;
+            --font-sub: 'Arial', sans-serif;
+            --font-label: 'IBM Plex Sans', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-label);
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 20px 20px 20px;
+        }
+
+        h1 {
+            font-family: var(--font-head);
+            font-size: 3.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 0 0 10px 0;
+        }
+
+        .subhed {
+            font-family: var(--font-sub);
+            font-size: 1.25rem;
+            color: var(--text-sub);
+            margin: 0;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.4;
+        }
+
+        .slide-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .narrative-block {
+            max-width: 800px;
+            margin: 0 auto 30px auto;
+            text-align: left;
+            font-family: var(--font-sub);
+            font-size: 1.15rem;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        .narrative-block h2 {
+            font-family: var(--font-head);
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: #111;
+            border-bottom: 3px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .filters {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 10px;
+            z-index: 100;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-group label {
+            font-family: var(--font-label);
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            color: var(--text-sub);
+        }
+
+        .filter-group select, .filter-group input {
+            font-family: var(--font-label);
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .filter-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: #e74c3c;
+            color: white;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: var(--font-label);
+            font-size: 0.95rem;
+            border: none;
+            transition: 0.2s;
+        }
+        .filter-toggle:hover {
+            background: #c0392b;
+        }
+        .filter-toggle.active {
+            background: #27ae60;
+        }
+
+        .file-upload-wrapper {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .legend-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            font-family: var(--font-label);
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        .legend-color {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+
+        .charts-row {
+            display: flex;
+            flex-direction: row;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .charts-row-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .chart-box {
+            flex: 1;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            height: 450px;
+            position: relative;
+        }
+        
+        .chart-box-small {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            height: 350px;
+            position: relative;
+        }
+
+        .bar-chart-box {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .bar-canvas-wrapper {
+            height: 350px;
+            margin-bottom: 20px;
+        }
+
+        .chart-title {
+            font-family: var(--font-head);
+            font-size: 1.4rem;
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 5px;
+        }
+        
+        .chart-subtitle {
+            font-family: var(--font-sub);
+            font-size: 0.9rem;
+            text-align: center;
+            color: #777;
+            margin-bottom: 15px;
+        }
+
+        .correlation-display {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-family: var(--font-head);
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #e74c3c;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 5px 10px;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .table-container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            margin-bottom: 40px;
+            overflow-x: auto;
+        }
+        
+        .table-container h2 {
+            font-family: var(--font-head);
+            font-size: 1.8rem;
+            margin-top: 0;
+        }
+
+        .diff-pos { color: #e74c3c; font-weight: bold; }
+        .diff-neg { color: #27ae60; font-weight: bold; }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            .charts-row {
+                flex-direction: column;
+            }
+            .chart-box {
+                height: 350px;
+            }
+            .correlation-display {
+                font-size: 1.2rem;
+                top: 10px;
+                right: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="slide-container">
+        
+        <div class="header">
+            <h1>Great Unread Books</h1>
+            <p class="subhed">Prize-Winning and Notable Books that people love to pick up and love to abandon.</p>
+        </div>
+
+        <div class="file-upload-wrapper">
+            <input type="file" id="fileInput" accept=".json" style="font-family: var(--font-label);">
+            <p style="font-size: 0.9rem; color: #888;">Upload analysis_results.json to populate the dashboard.</p>
+        </div>
+
+        <div id="dashboard-content" style="display: none;">
+            
+            <div class="filters">
+                <div class="filter-group">
+                    <label>Award / List</label>
+                    <select id="filterAward">
+                        <option value="All">All Awards</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Year Range</label>
+                    <div style="display: flex; gap: 5px;">
+                        <input type="number" id="filterYearStart" placeholder="Start" style="width: 80px;">
+                        <input type="number" id="filterYearEnd" placeholder="End" style="width: 80px;">
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <label>Genre</label>
+                    <select id="filterGenre">
+                        <option value="All">All Genres</option>
+                    </select>
+                </div>
+                <button id="btnHefty" class="filter-toggle">
+                    Show Only 600+ Page Books
+                </button>
+            </div>
+            
+            <div class="legend-container" id="colorLegend"></div>
+
+            <!-- NARRATIVE PART 1 -->
+            <div class="narrative-block">
+                <h2>1. The Aspirational Guilt Trap</h2>
+                <p>Does society more highly value the books it does not finish? The data says yes. There is a positive mathematical correlation between how heavily a book is abandoned and how highly it is rated. We buy dense, important books out of respect for their cultural capital, rate them 5 stars, and quietly abandon them after 50 pages. The exact same psychological trigger that causes someone to add a book to their wishlist is the exact same trigger that causes them to get bogged down and abandon it.</p>
+            </div>
+
+            <div class="charts-row">
+                <div class="chart-box">
+                    <h3 class="chart-title">Aspirational Guilt</h3>
+                    <p class="chart-subtitle">Higher Ratings correlated with Higher Abandonment</p>
+                    <div class="correlation-display" id="corrStruggle">r = ?</div>
+                    <canvas id="struggleChart"></canvas>
+                </div>
+                <div class="chart-box">
+                    <h3 class="chart-title">The Aspirational Trap</h3>
+                    <p class="chart-subtitle">Books highly wished for are highly abandoned</p>
+                    <div class="correlation-display" id="corrTrap">r = ?</div>
+                    <canvas id="trapChart"></canvas>
+                </div>
+            </div>
+
+            <!-- NARRATIVE PART 2 -->
+            <div class="narrative-block">
+                <h2>2. The Narrative Velocity Gap</h2>
+                <p>When we look at the sheer volume of reading activity across different eras, an interesting pattern emerges. While older classics dominate the total numbers, modern eras show a different ratio of "Currently Reading" versus actually "Read."</p>
+            </div>
+
+            <div class="bar-chart-box">
+                <h3 class="chart-title">The Velocity Timeline</h3>
+                <p class="chart-subtitle">Total Volume of Read vs Currently Reading (Post-1900)</p>
+                <div class="bar-canvas-wrapper">
+                    <canvas id="timelineChart1"></canvas>
+                </div>
+            </div>
+
+            <!-- NARRATIVE PART 3: AWARDS -->
+            <div class="narrative-block">
+                <h2>3. The Prestige of the Prize</h2>
+                <p>What does an award actually signify? The data proves a massive divide. The <strong>Man Booker</strong> creates incredible "Wishlist" desire to read, but it rarely translates into actual reading. The <strong>Pulitzer Nonfiction</strong> gives people the motivation to start reading, but it serves as a graveyard of ambition—it has the highest abandonment of any award. Meanwhile, the <strong>Pulitzer Fiction</strong> committee is the gold standard: they pick books that people actually finish AND rate highly.</p>
+            </div>
+
+            <div class="charts-row-3">
+                <div class="chart-box-small">
+                    <h3 class="chart-title">The "Wishlist" Award</h3>
+                    <p class="chart-subtitle">Highest Desire to Read (Want to Read / Read)</p>
+                    <canvas id="awardChart1"></canvas>
+                </div>
+                <div class="chart-box-small">
+                    <h3 class="chart-title">The "False Start" Award</h3>
+                    <p class="chart-subtitle">Highest Struggle (Currently Reading / Read)</p>
+                    <canvas id="awardChart2"></canvas>
+                </div>
+                <div class="chart-box-small">
+                    <h3 class="chart-title">The "Page Turner" Award</h3>
+                    <p class="chart-subtitle">Actually Finished (Lowest DNR Index)</p>
+                    <canvas id="awardChart3"></canvas>
+                </div>
+            </div>
+
+            <!-- NARRATIVE PART 4: THE CLIFF -->
+            <div class="narrative-block">
+                <h2>4. The 600-Page Cliff</h2>
+                <p>The DNR Index tracks the ratio of Current Readers to Finished Readers. When the DNR is <strong>below 0</strong>, it means most people who start the book actually finish it. When it rises <strong>above 0</strong>, it suggests a significantly larger number of people are currently bogged down in it than have ever completed it.</p>
+                <p>Page length matters, but not linearly. The data shows that from 100 pages up to 599 pages, the abandonment rate only creeps up slightly. However, the moment a book crosses the psychological barrier of <strong>600 pages</strong>, there is a massive drop-off cliff (a hockey stick effect) where abandonment spikes instantly.</p>
+                <p>What books survive the cliff? The Hefty Page-Turners are dominated by sweeping Classics (<em>Atlas Shrugged</em>, <em>Gone with the Wind</em>). But the absolute biggest rule-breaker is <strong>Gödel, Escher, Bach</strong>. Even though Science books are typically highly abandoned, this 820-page monster completely defies its genre and is one of the most finished hefty books in the dataset.</p>
+            </div>
+
+            <div class="bar-chart-box" style="height: 400px;">
+                <h3 class="chart-title">The 600-Page Cliff</h3>
+                <p class="chart-subtitle">Average DNR Index by 100-Page Buckets</p>
+                <div class="bar-canvas-wrapper" style="height: 300px;">
+                    <canvas id="cliffChart"></canvas>
+                </div>
+            </div>
+
+            <!-- NARRATIVE PART 5: ALTERNATIVE PROXIES -->
+            <div class="narrative-block">
+                <h2>5. Experimental: Alternative Statistical Proxies</h2>
+                <p>While the DNR Index maps everything from -1 to 1, we can translate these signals into intuitive, real-world percentages:</p>
+                <ul>
+                    <li><strong>The Graveyard Rate:</strong> "Of everyone who has started this book, what percentage is still 'reading' it?" (0-100%)</li>
+                    <li><strong>The Page-Adjusted Slog Rate:</strong> Isolates books abandoned aggressively despite being short, normalizing against length.</li>
+                    <li><strong>The Hype Decay Ratio:</strong> Currently Reading / To-Read. Measures how hype decays over time while abandoned bookmarks remain.</li>
+                </ul>
+            </div>
+
+            <div class="charts-row-3">
+                <div class="chart-box-small">
+                    <h3 class="chart-title">Top 10 Graveyards</h3>
+                    <p class="chart-subtitle">Highest % of readers stuck (Graveyard Rate)</p>
+                    <canvas id="proxyChart1"></canvas>
+                </div>
+                <div class="chart-box-small">
+                    <h3 class="chart-title">Top 10 Slogs</h3>
+                    <p class="chart-subtitle">High abandonment despite short length</p>
+                    <canvas id="proxyChart2"></canvas>
+                </div>
+                <div class="chart-box-small">
+                    <h3 class="chart-title">Hype Decay</h3>
+                    <p class="chart-subtitle">Hype Ratio vs Publication Year</p>
+                    <canvas id="proxyChart3"></canvas>
+                </div>
+            </div>
+
+            <!-- NARRATIVE PART 6: TABLES -->
+            <div class="narrative-block">
+                <h2>6. The Raw Data & Benchmarks</h2>
+                <p>Explore the full dataset. The new <strong>+/- Benchmark columns</strong> show how a book performs relative to its peers. You can also rank by the new Graveyard Rate and Slog Rate using the columns on the far right.</p>
+            </div>
+            
+            <div class="table-container">
+                <table id="booksTable" class="display nowrap" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Award</th>
+                            <th>Year</th>
+                            <th>Pages</th>
+                            <th>Genre</th>
+                            <th>Avg Rating</th>
+                            <th>DNR Index</th>
+                            <th>vs. Global</th>
+                            <th>vs. Genre</th>
+                            <th>vs. Prize</th>
+                            <th>Read</th>
+                            <th>Curr. Reading</th>
+                            <th>To-Read</th>
+                            <th>Graveyard Rate</th>
+                            <th>Slog Rate</th>
+                            <th>Hype Decay</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <!-- NARRATIVE PART 7: CONCLUSION -->
+            <div class="narrative-block" style="margin-top: 60px; padding-top: 30px; border-top: 1px solid #ccc;">
+                <h2>Conclusion: The 2017 Snapshot</h2>
+                <p>It is crucial to understand that this dataset is a precise snapshot of reading habits captured in late 2017. The "Currently Reading" and "Want to Read" shelf counts represent what the reading public was actively engaged with at that exact moment in time.</p>
+                <p>This explains why the historical timeline data appears sparse prior to the 1990s. For a book from the 1960s to appear in this dataset with high reading activity, it must possess enough enduring cultural power to <em>still</em> be widely assigned in schools or actively sought out by modern readers over 50 years later. The older books that survive in this data are the monumental classics—and the math shows us exactly how much modern readers struggle to get through them.</p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@2.2.1/dist/chartjs-plugin-annotation.min.js"></script>
+
+    <script>
+        let fullData = [];
+        let globalAvgDNR = 0;
+
+        // Auto-load analysis_results.json if present
+        window.addEventListener('DOMContentLoaded', () => {
+            fetch('analysis_results.json')
+                .then(response => {
+                    if (!response.ok) throw new Error('Not found');
+                    return response.json();
+                })
+                .then(parsed => {
+                    fullData = parsed.books || [];
+                    fullData.forEach(b => {
+                        if (b.currently_reading !== undefined && b.read !== undefined) {
+                            let cr = b.currently_reading;
+                            let r = b.read;
+                            b.graveyard_rate = (cr / (cr + r)) * 100;
+                            
+                            let pages = parseInt(b.num_pages);
+                            if (pages > 0 && r > 0) {
+                                b.slog_rate = (cr / r) / (pages / 100);
+                            } else {
+                                b.slog_rate = 0;
+                            }
+                            
+                            let tr = b['to-read'] || 0;
+                            if (tr > 0) {
+                                b.hype_decay = cr / tr;
+                            } else {
+                                b.hype_decay = 0;
+                            }
+                        }
+                    });
+                    initDashboard();
+                })
+                .catch(err => {
+                    console.log('No local analysis_results.json found or failed to fetch, showing manual uploader.', err);
+                });
+        });
+        let genreAvgDNR = {};
+        let awardAvgDNR = {};
+        let filterHeftyOnly = false;
+        
+        let struggleChartInstance = null;
+        let trapChartInstance = null;
+        let timeline1Instance = null;
+        let awardChart1Instance = null;
+        let awardChart2Instance = null;
+        let awardChart3Instance = null;
+        let cliffChartInstance = null;
+        let proxyChart1Instance = null;
+        let proxyChart2Instance = null;
+        let proxyChart3Instance = null;
+        let dataTableInstance = null;
+        
+        const genreColors = {
+            'history': '#e74c3c',
+            'nonfiction': '#e67e22',
+            'science': '#d35400',
+            'biography': '#c0392b',
+            'memoir': '#f39c12',
+            'fantasy': '#9b59b6',
+            'science-fiction': '#8e44ad',
+            'young-adult': '#2980b9',
+            'mystery': '#27ae60',
+            'thriller': '#2ecc71',
+            'literary-fiction': '#16a085',
+            'classics': '#1abc9c',
+            'contemporary': '#3498db',
+            'short-stories': '#f1c40f'
+        };
+        const defaultColor = '#95a5a6';
+
+        function getColorForGenre(genre) {
+            if (!genre) return defaultColor;
+            return genreColors[genre.toLowerCase()] || defaultColor;
+        }
+
+        // --- MATH UTILS ---
+        function calculatePearson(xArr, yArr) {
+            const n = xArr.length;
+            if (n === 0) return 0;
+            const sumX = xArr.reduce((a, b) => a + b, 0);
+            const sumY = yArr.reduce((a, b) => a + b, 0);
+            const sumX2 = xArr.reduce((a, b) => a + b * b, 0);
+            const sumY2 = yArr.reduce((a, b) => a + b * b, 0);
+            const sumXY = xArr.reduce((a, b, i) => a + b * yArr[i], 0);
+
+            const num = (n * sumXY) - (sumX * sumY);
+            const den = Math.sqrt(((n * sumX2) - (sumX * sumX)) * ((n * sumY2) - (sumY * sumY)));
+            if (den === 0) return 0;
+            return num / den;
+        }
+
+        function calculateLinearRegression(xArr, yArr) {
+            const n = xArr.length;
+            if (n === 0) return { m: 0, b: 0 };
+            const sumX = xArr.reduce((a, b) => a + b, 0);
+            const sumY = yArr.reduce((a, b) => a + b, 0);
+            const sumXY = xArr.reduce((a, b, i) => a + b * yArr[i], 0);
+            const sumX2 = xArr.reduce((a, b) => a + b * b, 0);
+            
+            const m = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+            const b = (sumY - m * sumX) / n;
+            return { m, b };
+        }
+
+        document.getElementById('fileInput').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const parsed = JSON.parse(e.target.result);
+                    fullData = parsed.books || [];
+                    
+                    // Attach alternative proxy logic globally on load
+                    fullData.forEach(b => {
+                        if (b.currently_reading !== undefined && b.read !== undefined) {
+                            let cr = b.currently_reading;
+                            let r = b.read;
+                            b.graveyard_rate = (cr / (cr + r)) * 100;
+                            
+                            let pages = parseInt(b.num_pages);
+                            if (pages > 0 && r > 0) {
+                                b.slog_rate = (cr / r) / (pages / 100);
+                            } else {
+                                b.slog_rate = 0;
+                            }
+                            
+                            let tr = b['to-read'] || 0;
+                            if (tr > 0) {
+                                b.hype_decay = cr / tr;
+                            } else {
+                                b.hype_decay = 0;
+                            }
+                        }
+                    });
+                    
+                    initDashboard();
+                } catch (error) {
+                    alert('Error parsing JSON file.');
+                }
+            };
+            reader.readAsText(file);
+        });
+
+        function initDashboard() {
+            document.getElementById('dashboard-content').style.display = 'block';
+            document.querySelector('.file-upload-wrapper').style.display = 'none';
+
+            populateFilters();
+            buildLegend();
+            
+            document.getElementById('filterAward').addEventListener('change', updateViews);
+            document.getElementById('filterYearStart').addEventListener('input', updateViews);
+            document.getElementById('filterYearEnd').addEventListener('input', updateViews);
+            document.getElementById('filterGenre').addEventListener('change', updateViews);
+            
+            document.getElementById('btnHefty').addEventListener('click', function() {
+                filterHeftyOnly = !filterHeftyOnly;
+                if(filterHeftyOnly) {
+                    this.classList.add('active');
+                    this.innerText = 'Showing 600+ Page Books (Click to clear)';
+                } else {
+                    this.classList.remove('active');
+                    this.innerText = 'Show Only 600+ Page Books';
+                }
+                updateViews();
+            });
+
+            initTables();
+            updateViews();
+        }
+        
+        function calculateBenchmarks(data) {
+            const valid = data.filter(b => b.currently_reading > 0 && b.read > 0);
+            let dnrSum = 0;
+            genreAvgDNR = {};
+            awardAvgDNR = {};
+            let genreSums = {};
+            let awardSums = {};
+            
+            valid.forEach(b => {
+                let dnr = b.ratio_4_dnr_index;
+                dnrSum += dnr;
+                let g = b.genre || 'unknown';
+                if (!genreSums[g]) genreSums[g] = {s: 0, c: 0};
+                genreSums[g].s += dnr; genreSums[g].c += 1;
+                let aw = b.award;
+                if (aw) {
+                    if (!awardSums[aw]) awardSums[aw] = {s: 0, c: 0};
+                    awardSums[aw].s += dnr; awardSums[aw].c += 1;
+                }
+            });
+            globalAvgDNR = valid.length > 0 ? (dnrSum / valid.length) : 0;
+            for (let g in genreSums) genreAvgDNR[g] = genreSums[g].s / genreSums[g].c;
+            for (let aw in awardSums) awardAvgDNR[aw] = awardSums[aw].s / awardSums[aw].c;
+        }
+
+        function buildLegend() {
+            const legendContainer = document.getElementById('colorLegend');
+            const groups = [
+                {name: "History / Non-Fiction", color: "#e74c3c"},
+                {name: "Sci-Fi / Fantasy / YA", color: "#9b59b6"},
+                {name: "Mystery / Thriller", color: "#27ae60"},
+                {name: "Classics / Literary", color: "#16a085"},
+                {name: "Other", color: "#95a5a6"}
+            ];
+            groups.forEach(g => {
+                let div = document.createElement('div');
+                div.className = 'legend-item';
+                div.innerHTML = `<div class="legend-color" style="background-color: ${g.color};"></div> ${g.name}`;
+                legendContainer.appendChild(div);
+            });
+        }
+
+        function populateFilters() {
+            const awards = new Set();
+            const genres = new Set();
+            let minYr = 3000, maxYr = 0;
+
+            fullData.forEach(b => {
+                if (b.award) awards.add(b.award);
+                if (b.genre && b.genre !== 'unknown') genres.add(b.genre);
+                let yr = parseInt(b.publication_year);
+                if (!isNaN(yr)) {
+                    if (yr < minYr) minYr = yr;
+                    if (yr > maxYr) maxYr = yr;
+                }
+            });
+
+            const awardSelect = document.getElementById('filterAward');
+            Array.from(awards).sort().forEach(aw => {
+                let opt = document.createElement('option');
+                opt.value = aw; opt.innerText = aw;
+                awardSelect.appendChild(opt);
+            });
+
+            const genreSelect = document.getElementById('filterGenre');
+            Array.from(genres).sort().forEach(g => {
+                let opt = document.createElement('option');
+                opt.value = g; opt.innerText = g.charAt(0).toUpperCase() + g.slice(1);
+                genreSelect.appendChild(opt);
+            });
+            
+            if(minYr < 3000) {
+                document.getElementById('filterYearStart').placeholder = minYr;
+                document.getElementById('filterYearEnd').placeholder = maxYr;
+            }
+        }
+
+        function updateViews() {
+            const selAward = document.getElementById('filterAward').value;
+            const selGenre = document.getElementById('filterGenre').value;
+            const yrStart = parseInt(document.getElementById('filterYearStart').value);
+            const yrEnd = parseInt(document.getElementById('filterYearEnd').value);
+
+            const filteredData = fullData.filter(b => {
+                let matchAw = (selAward === 'All' || b.award === selAward);
+                let matchGn = (selGenre === 'All' || b.genre === selGenre);
+                let matchHefty = (!filterHeftyOnly || (b.num_pages && parseInt(b.num_pages) >= 600));
+                
+                let matchYr = true;
+                let yr = parseInt(b.publication_year);
+                if (!isNaN(yr)) {
+                    if (!isNaN(yrStart) && yr < yrStart) matchYr = false;
+                    if (!isNaN(yrEnd) && yr > yrEnd) matchYr = false;
+                }
+                
+                return matchAw && matchYr && matchGn && matchHefty;
+            });
+
+            calculateBenchmarks(filteredData);
+            renderCharts(filteredData);
+            renderTimelineCharts(filteredData);
+            renderAwardCharts(filteredData);
+            renderCliffChart(filteredData);
+            renderProxyCharts(filteredData);
+            renderTable(filteredData);
+        }
+
+        function renderCharts(data) {
+            const validData = data.filter(b => b.currently_reading > 0 && b.read > 0 && b.ratio_1_struggle > 0 && b.ratio_3_aspirational > 0);
+
+            // SCRUB OUTLIERS FOR TRENDLINE CALCULATION
+            const stDataScrubbed = validData.filter(b => b.ratio_1_struggle < 10);
+            const trDataScrubbed = validData.filter(b => b.ratio_3_aspirational < 15);
+
+            // Chart 1: Struggle (CR/Read) vs Rating
+            const stX = stDataScrubbed.map(b => b.ratio_1_struggle);
+            const stY = stDataScrubbed.map(b => b.average_rating);
+            const r1 = calculatePearson(stX, stY);
+            document.getElementById('corrStruggle').innerText = `r = ${r1.toFixed(2)}`;
+            
+            const strugglePoints = validData.map(b => ({
+                x: b.ratio_1_struggle,
+                y: b.average_rating,
+                backgroundColor: getColorForGenre(b.genre),
+                book: b
+            }));
+
+            const reg1 = calculateLinearRegression(stX, stY);
+            const minStX = Math.min(...stX);
+            const maxStX = Math.max(...stX);
+            const trendline1 = [];
+            if(stX.length > 0) {
+                let steps = 20;
+                let logMin = Math.log(minStX);
+                let logMax = Math.log(maxStX);
+                let stepSize = (logMax - logMin) / steps;
+                for(let i=0; i<=steps; i++) {
+                    let vx = Math.exp(logMin + i*stepSize);
+                    trendline1.push({x: vx, y: reg1.m * vx + reg1.b});
+                }
+            }
+
+            const ctx1 = document.getElementById('struggleChart').getContext('2d');
+            if (struggleChartInstance) struggleChartInstance.destroy();
+            struggleChartInstance = new Chart(ctx1, {
+                type: 'scatter',
+                data: {
+                    datasets: [
+                        {
+                            label: 'Trendline',
+                            data: trendline1,
+                            type: 'line',
+                            borderColor: '#111',
+                            borderWidth: 2,
+                            fill: false,
+                            pointRadius: 0,
+                            pointHoverRadius: 0
+                        },
+                        {
+                            label: 'Books',
+                            data: strugglePoints,
+                            pointBackgroundColor: strugglePoints.map(p => p.backgroundColor),
+                            pointBorderColor: 'transparent',
+                            pointRadius: 5,
+                            pointHoverRadius: 8
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(ctx) {
+                                    if(ctx.datasetIndex === 0) return '';
+                                    const b = ctx.raw.book;
+                                    const g = b.genre ? b.genre.toUpperCase() : 'UNKNOWN';
+                                    return `${b.title} [${g}] (${b.average_rating}★) - CR/Read: ${b.ratio_1_struggle.toFixed(4)}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { type: 'logarithmic', title: { display: true, text: 'CR / Read (Log Scale)', font: {family: 'IBM Plex Sans'} } },
+                        y: { title: { display: true, text: 'Average Rating', font: {family: 'IBM Plex Sans'} } }
+                    }
+                }
+            });
+
+            // Chart 2: Trap (Asp Ratio) vs DNR Index
+            const trX = trDataScrubbed.map(b => b.ratio_3_aspirational);
+            const trY = trDataScrubbed.map(b => b.ratio_4_dnr_index);
+            const r2 = calculatePearson(trX, trY);
+            document.getElementById('corrTrap').innerText = `r = ${r2.toFixed(2)}`;
+            
+            const trapPoints = validData.map(b => ({
+                x: b.ratio_3_aspirational,
+                y: b.ratio_4_dnr_index,
+                backgroundColor: getColorForGenre(b.genre),
+                book: b
+            }));
+
+            const reg2 = calculateLinearRegression(trX, trY);
+            const minTrX = Math.min(...trX);
+            const maxTrX = Math.max(...trX);
+            const trendline2 = [];
+            if(trX.length > 0) {
+                let steps = 20;
+                let logMin = Math.log(minTrX);
+                let logMax = Math.log(maxTrX);
+                let stepSize = (logMax - logMin) / steps;
+                for(let i=0; i<=steps; i++) {
+                    let vx = Math.exp(logMin + i*stepSize);
+                    trendline2.push({x: vx, y: reg2.m * vx + reg2.b});
+                }
+            }
+
+            const ctx2 = document.getElementById('trapChart').getContext('2d');
+            if (trapChartInstance) trapChartInstance.destroy();
+            trapChartInstance = new Chart(ctx2, {
+                type: 'scatter',
+                data: {
+                    datasets: [
+                        {
+                            label: 'Trendline',
+                            data: trendline2,
+                            type: 'line',
+                            borderColor: '#111',
+                            borderWidth: 2,
+                            fill: false,
+                            pointRadius: 0,
+                            pointHoverRadius: 0
+                        },
+                        {
+                            label: 'Books',
+                            data: trapPoints,
+                            pointBackgroundColor: trapPoints.map(p => p.backgroundColor),
+                            pointBorderColor: 'transparent',
+                            pointRadius: 5,
+                            pointHoverRadius: 8
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(ctx) {
+                                    if(ctx.datasetIndex === 0) return '';
+                                    const b = ctx.raw.book;
+                                    const g = b.genre ? b.genre.toUpperCase() : 'UNKNOWN';
+                                    return `${b.title} [${g}] - Want/Read: ${b.ratio_3_aspirational.toFixed(2)}, DNR: ${b.ratio_4_dnr_index.toFixed(3)}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { type: 'logarithmic', title: { display: true, text: 'Want to Read / Read Ratio (Log)', font: {family: 'IBM Plex Sans'} } },
+                        y: { title: { display: true, text: 'DNR Index (-1 to 1)', font: {family: 'IBM Plex Sans'} } }
+                    }
+                }
+            });
+        }
+
+        function renderTimelineCharts(data) {
+            // Group by year to show SUM(read) vs SUM(CR)
+            const validData = data.filter(b => {
+                let yr = parseInt(b.publication_year);
+                return !isNaN(yr) && yr > 1900 && yr <= new Date().getFullYear();
+            });
+            
+            let yrSums = {};
+            validData.forEach(b => {
+                let yr = parseInt(b.publication_year);
+                if(!yrSums[yr]) yrSums[yr] = {read:0, cr:0};
+                yrSums[yr].read += b.read;
+                yrSums[yr].cr += b.currently_reading;
+            });
+            
+            let yrs = Object.keys(yrSums).sort((a,b) => a-b);
+            let readData = yrs.map(y => yrSums[y].read);
+            let crData = yrs.map(y => yrSums[y].cr);
+            
+            const ctx1 = document.getElementById('timelineChart1').getContext('2d');
+            if (timeline1Instance) timeline1Instance.destroy();
+            timeline1Instance = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: yrs,
+                    datasets: [
+                        { label: 'Total Finished (Read)', data: readData, backgroundColor: '#2ecc71', yAxisID: 'y' },
+                        { label: 'Total Currently Reading', data: crData, backgroundColor: '#e74c3c', yAxisID: 'y1' }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                    },
+                    scales: {
+                        x: { 
+                            title: { display: true, text: 'Publication Year', font: {family: 'IBM Plex Sans'} } 
+                        },
+                        y: { 
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: { display: true, text: 'Total Finished', font: {family: 'IBM Plex Sans'} }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: { display: true, text: 'Total Currently Reading', font: {family: 'IBM Plex Sans'} },
+                            grid: { drawOnChartArea: false } // Only draw grid lines for the left axis
+                        }
+                    }
+                }
+            });
+        }
+        
+        function renderAwardCharts(data) {
+            const valid = data.filter(b => b.currently_reading > 0 && b.read > 0);
+            let awSums = {};
+            valid.forEach(b => {
+                let aw = b.award;
+                if (!aw) return;
+                if (!awSums[aw]) awSums[aw] = {sDNR: 0, sAsp: 0, sStr: 0, c: 0};
+                awSums[aw].sDNR += b.ratio_4_dnr_index;
+                awSums[aw].sAsp += b.ratio_3_aspirational;
+                awSums[aw].sStr += b.ratio_1_struggle;
+                awSums[aw].c += 1;
+            });
+            
+            let arr = [];
+            for (let aw in awSums) {
+                if (awSums[aw].c >= 2) {
+                    arr.push({ aw: aw, dnr: awSums[aw].sDNR / awSums[aw].c, asp: awSums[aw].sAsp / awSums[aw].c, str: awSums[aw].sStr / awSums[aw].c });
+                }
+            }
+            
+            let d1 = [...arr].sort((a,b) => b.asp - a.asp).slice(0, 5);
+            const ctxA = document.getElementById('awardChart1').getContext('2d');
+            if (awardChart1Instance) awardChart1Instance.destroy();
+            awardChart1Instance = new Chart(ctxA, {
+                type: 'bar',
+                data: { labels: d1.map(d => d.aw), datasets: [{ data: d1.map(d => d.asp), backgroundColor: '#9b59b6' }] },
+                options: { plugins: {legend: {display:false}}, indexAxis: 'y', maintainAspectRatio: false }
+            });
+            
+            let d2 = [...arr].sort((a,b) => b.str - a.str).slice(0, 5);
+            const ctxB = document.getElementById('awardChart2').getContext('2d');
+            if (awardChart2Instance) awardChart2Instance.destroy();
+            awardChart2Instance = new Chart(ctxB, {
+                type: 'bar',
+                data: { labels: d2.map(d => d.aw), datasets: [{ data: d2.map(d => d.str), backgroundColor: '#e74c3c' }] },
+                options: { plugins: {legend: {display:false}}, indexAxis: 'y', maintainAspectRatio: false }
+            });
+            
+            let d3 = [...arr].sort((a,b) => a.dnr - b.dnr).slice(0, 5);
+            const ctxC = document.getElementById('awardChart3').getContext('2d');
+            if (awardChart3Instance) awardChart3Instance.destroy();
+            awardChart3Instance = new Chart(ctxC, {
+                type: 'bar',
+                data: { labels: d3.map(d => d.aw), datasets: [{ data: d3.map(d => d.dnr), backgroundColor: '#2ecc71' }] },
+                options: { plugins: {legend: {display:false}}, indexAxis: 'y', maintainAspectRatio: false }
+            });
+        }
+
+        function renderCliffChart(data) {
+            // Scrub out obvious errors (massive classics assigned < 200 pages)
+            const validData = data.filter(b => {
+                if(b.currently_reading <= 0 || b.read <= 0 || b.num_pages <= 0) return false;
+                if(b.num_pages < 200 && b.ratings_count > 1000 && (b.title.toLowerCase().includes('tolstoy') || b.title.toLowerCase().includes('war and peace'))) return false;
+                return true;
+            });
+            
+            // Bucket by 100 pages
+            let buckets = {};
+            for(let i=0; i<=1500; i+=100) buckets[i] = {sum:0, count:0};
+            
+            validData.forEach(b => {
+                let p = parseInt(b.num_pages);
+                if (p > 1500) p = 1500; // cap at 1500 bucket
+                let bkt = Math.floor(p/100)*100;
+                if(buckets[bkt]) {
+                    buckets[bkt].sum += b.ratio_4_dnr_index;
+                    buckets[bkt].count += 1;
+                }
+            });
+            
+            let labels = [];
+            let avgDNRs = [];
+            let pointColors = [];
+            
+            for(let i=0; i<=1500; i+=100) {
+                if(buckets[i].count > 5) { // Only plot buckets with enough data
+                    labels.push(`${i}-${i+99}`);
+                    let avg = buckets[i].sum / buckets[i].count;
+                    avgDNRs.push(avg);
+                    pointColors.push(i >= 600 ? '#e74c3c' : '#3498db');
+                }
+            }
+
+            const ctx = document.getElementById('cliffChart').getContext('2d');
+            if (cliffChartInstance) cliffChartInstance.destroy();
+            cliffChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Average DNR Index',
+                        data: avgDNRs,
+                        borderColor: '#2c3e50',
+                        borderWidth: 2,
+                        pointBackgroundColor: pointColors,
+                        pointRadius: 6,
+                        pointHoverRadius: 9,
+                        fill: false,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(ctx) {
+                                    return `Avg DNR: ${ctx.raw.toFixed(3)}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { 
+                            title: { display: true, text: 'Page Count Buckets', font: {family: 'IBM Plex Sans'} }
+                        },
+                        y: { 
+                            title: { display: true, text: 'Average DNR Index', font: {family: 'IBM Plex Sans'} },
+                            min: -1,
+                            max: 0
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderProxyCharts(data) {
+            const valid = data.filter(b => b.graveyard_rate !== undefined && b.slog_rate !== undefined && b.hype_decay !== undefined);
+            
+            // Require min 500 ratings to filter out weird anomalies in top 10 charts
+            const significantData = valid.filter(b => b.ratings_count > 500);
+
+            // Top 10 Graveyard
+            let topGraveyard = [...significantData].sort((a,b) => b.graveyard_rate - a.graveyard_rate).slice(0, 10);
+            const ctxA = document.getElementById('proxyChart1').getContext('2d');
+            if (proxyChart1Instance) proxyChart1Instance.destroy();
+            proxyChart1Instance = new Chart(ctxA, {
+                type: 'bar',
+                data: {
+                    labels: topGraveyard.map(d => d.title.length > 25 ? d.title.substring(0, 25) + '...' : d.title),
+                    datasets: [{ data: topGraveyard.map(d => d.graveyard_rate), backgroundColor: '#8e44ad' }]
+                },
+                options: { 
+                    plugins: {
+                        legend: {display:false},
+                        tooltip: { callbacks: { label: function(ctx) { return `${ctx.raw.toFixed(1)}%`; } } }
+                    }, 
+                    indexAxis: 'y', 
+                    maintainAspectRatio: false,
+                    scales: { x: { title: { display: true, text: 'Graveyard Rate (%)', font: {family: 'IBM Plex Sans'} } } }
+                }
+            });
+
+            // Top 10 Slog
+            let topSlog = [...significantData].sort((a,b) => b.slog_rate - a.slog_rate).slice(0, 10);
+            const ctxB = document.getElementById('proxyChart2').getContext('2d');
+            if (proxyChart2Instance) proxyChart2Instance.destroy();
+            proxyChart2Instance = new Chart(ctxB, {
+                type: 'bar',
+                data: {
+                    labels: topSlog.map(d => d.title.length > 25 ? d.title.substring(0, 25) + '...' : d.title),
+                    datasets: [{ data: topSlog.map(d => d.slog_rate), backgroundColor: '#c0392b' }]
+                },
+                options: { 
+                    plugins: {
+                        legend: {display:false},
+                        tooltip: { callbacks: { label: function(ctx) { return `Slog Rate: ${ctx.raw.toFixed(2)}`; } } }
+                    }, 
+                    indexAxis: 'y', 
+                    maintainAspectRatio: false,
+                    scales: { x: { title: { display: true, text: 'Slog Rate', font: {family: 'IBM Plex Sans'} } } }
+                }
+            });
+
+            // Hype Decay Scatter
+            const hypePoints = significantData.filter(b => b.publication_year > 1950 && b.hype_decay > 0).map(b => ({
+                x: parseInt(b.publication_year),
+                y: b.hype_decay,
+                backgroundColor: getColorForGenre(b.genre),
+                book: b
+            }));
+            const ctxC = document.getElementById('proxyChart3').getContext('2d');
+            if (proxyChart3Instance) proxyChart3Instance.destroy();
+            proxyChart3Instance = new Chart(ctxC, {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        data: hypePoints,
+                        pointBackgroundColor: hypePoints.map(p => p.backgroundColor),
+                        pointRadius: 4,
+                        pointBorderColor: 'transparent',
+                        pointHoverRadius: 7
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { 
+                        legend: {display:false},
+                        tooltip: { callbacks: { label: function(ctx) { return `${ctx.raw.book.title} (${ctx.raw.x}) - Hype Ratio: ${ctx.raw.y.toFixed(3)}`; } } }
+                    },
+                    scales: {
+                        x: { title: {display:true, text: 'Publication Year', font: {family: 'IBM Plex Sans'}}, ticks: {callback: function(v){return Math.floor(v);}} },
+                        y: { type: 'logarithmic', title: {display:true, text: 'Hype Ratio (Log Scale)', font: {family: 'IBM Plex Sans'}} }
+                    }
+                }
+            });
+        }
+
+        function formatDiff(val) {
+            if (val === undefined || isNaN(val)) return '-';
+            let prefix = val > 0 ? '+' : '';
+            let cls = val > 0 ? 'diff-pos' : (val < 0 ? 'diff-neg' : '');
+            return `<span class="${cls}">${prefix}${val.toFixed(3)}</span>`;
+        }
+
+        function initTables() {
+            dataTableInstance = $('#booksTable').DataTable({
+                pageLength: 25,
+                order: [[10, 'desc']], // Sort by Graveyard Rate as new default
+                scrollX: true
+            });
+        }
+
+        function renderTable(data) {
+            dataTableInstance.clear();
+            data.forEach(b => {
+                let dnr = b.ratio_4_dnr_index;
+                let g = b.genre || 'unknown';
+                let aw = b.award || 'none';
+                
+                let diffGlobal = (dnr !== undefined && globalAvgDNR !== undefined) ? dnr - globalAvgDNR : undefined;
+                let diffGenre = (dnr !== undefined && genreAvgDNR[g] !== undefined) ? dnr - genreAvgDNR[g] : undefined;
+                let diffAward = (dnr !== undefined && awardAvgDNR[aw] !== undefined) ? dnr - awardAvgDNR[aw] : undefined;
+
+                dataTableInstance.row.add([
+                    b.title,
+                    b.award || '',
+                    b.publication_year || '',
+                    b.num_pages || '',
+                    g !== 'unknown' ? g.charAt(0).toUpperCase() + g.slice(1) : '',
+                    b.average_rating.toFixed(2),
+                    dnr !== undefined ? dnr.toFixed(4) : 0,
+                    formatDiff(diffGlobal),
+                    formatDiff(diffGenre),
+                    formatDiff(diffAward),
+                    b.read !== undefined ? b.read.toLocaleString() : 0,
+                    b.currently_reading !== undefined ? b.currently_reading.toLocaleString() : 0,
+                    b['to-read'] !== undefined ? b['to-read'].toLocaleString() : 0,
+                    b.graveyard_rate !== undefined ? b.graveyard_rate.toFixed(2) + '%' : '-',
+                    b.slog_rate !== undefined ? b.slog_rate.toFixed(4) : '-',
+                    b.hype_decay !== undefined ? b.hype_decay.toFixed(4) : '-'
+                ]);
+            });
+            dataTableInstance.draw();
+        }
+    </script>
+</body>
+</html>
