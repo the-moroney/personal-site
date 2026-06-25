@@ -261,7 +261,7 @@
         .diff-neg { color: #27ae60; font-weight: bold; }
 
         @media (max-width: 768px) {
-            h1 { font-size: 2.5rem; }
+            h1 { font-size: 2.2rem; }
             .filters {
                 position: static !important; /* Vanishes with scrolling */
                 box-shadow: none !important;
@@ -271,15 +271,28 @@
                 gap: 20px;
             }
             .chart-box, .chart-box-small, .bar-chart-box {
-                height: 82vh !important; /* One chart per screen for screenshots */
-                margin-bottom: 40px !important;
+                height: 80vh !important; /* Fits perfectly on mobile viewports */
+                margin-bottom: 45px !important;
                 box-sizing: border-box;
+                display: flex !important;
+                flex-direction: column !important;
+                overflow: hidden !important; /* Stops Chart.js infinite resize/expansion loop */
+                padding: 15px !important;
             }
-            .bar-canvas-wrapper {
-                height: 75% !important; /* Ensure canvas fills the box */
+            .chart-box canvas, .chart-box-small canvas, .bar-canvas-wrapper {
+                flex-grow: 1 !important;
+                min-height: 0 !important;
+                height: 100% !important;
+            }
+            .chart-title {
+                font-size: 1.2rem !important;
+            }
+            .chart-subtitle {
+                font-size: 0.85rem !important;
+                margin-bottom: 10px !important;
             }
             .correlation-display {
-                font-size: 1.2rem;
+                font-size: 1.1rem;
                 top: 10px;
                 right: 10px;
             }
